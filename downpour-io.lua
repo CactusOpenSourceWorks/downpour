@@ -116,9 +116,21 @@ downpour.ioutils.numericutils["is_digit"] = function (char)
   if (not char) or (type(char) ~= "string") then
     log.write("%s", "[!] - downpour.ioutils.numericutils.is_digit(): Bad argument passed.")
   end
-
+  
   local range = sbyte(char, 1)
   return range >= 48 and range <= 57
+end
+
+downpour.ioutils.numericutils["map_to_range"] = function (f, a, b, x, y)
+  return (f - a) / (b - a) * (y - x) + x
+end
+
+downpour.ioutils.numericutils["map_to_01"] = function (f, a, b)
+  return (f - a) / (b - a)
+end
+
+downpour.ioutils.numericutils["map_from_01"] = function (f, x, y)
+  return f / 1.0 * (y - x) + x
 end -- // downpour.ioutils.numericutils = {}
 
 downpour.ioutils.stringutils = {}
