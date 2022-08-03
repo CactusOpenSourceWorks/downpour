@@ -81,10 +81,10 @@ downpour.math = {}
 
 downpour.math["integrate_N"] = 64
 
-local normalize = downpour.ioutils.numericutils.normalize
-local bit_and   = downpour.ioutils.numericutils.bit_and
-local bit_or    = downpour.ioutils.numericutils.bit_or
-local bit_xor   = downpour.ioutils.numericutils.bit_xor
+local normalize = downpour.numeric.normalize
+local bit_and   = downpour.numeric.bit_and
+local bit_or    = downpour.numeric.bit_or
+local bit_xor   = downpour.numeric.bit_xor
 
 local seed = function ()
   return normalize(os.time())

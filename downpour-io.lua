@@ -46,15 +46,15 @@ end
 
 downpour.ioutils["ternary"] = _ternary
 
-downpour.ioutils.numericutils = {}
+downpour.numeric = {}
 
 local normalize = function (n)
   return (n % 0x80000000)
 end
 
-downpour.ioutils.numericutils["normalize"] = normalize
+downpour.numeric["normalize"] = normalize
 
-downpour.ioutils.numericutils["bit_and"] = function (a, b)
+downpour.numeric["bit_and"] = function (a, b)
   local r, m = 0, 0
   for m = 0, 31 do
   if (a % 2 == 1) and (b % 2 == 1) then
@@ -67,7 +67,7 @@ downpour.ioutils.numericutils["bit_and"] = function (a, b)
   return normalize(r)
 end
 
-downpour.ioutils.numericutils["bit_or"] = function (a, b)
+downpour.numeric["bit_or"] = function (a, b)
   local r, m = 0, 0
   for m = 0, 31 do
   if (a % 2 == 1) and (b % 2 == 1) then
@@ -82,7 +82,7 @@ downpour.ioutils.numericutils["bit_or"] = function (a, b)
   return normalize(r)
 end
 
-downpour.ioutils.numericutils["bit_xor"] = function (a, b)
+downpour.numeric["bit_xor"] = function (a, b)
   local r, m = 0, 0
   for m = 0, 31 do
   if a % 2 ~= b % 2 then r = r + 2 ^ m end
@@ -96,11 +96,11 @@ downpour.ioutils.numericutils["bit_xor"] = function (a, b)
 end
 
 -- Returns percentage of n between interval [a; b]
-downpour.ioutils.numericutils["get_percent_between"] = function (a, b, n)
+downpour.numeric["get_percent_between"] = function (a, b, n)
   return (n - a) * (100 / (b - a))
 end
 
-downpour.ioutils.numericutils["wrap"] = function (x, a, b)
+downpour.numeric["wrap"] = function (x, a, b)
   if x > b then
     return a
   elseif x < a then
@@ -112,26 +112,26 @@ end
 
 -- Returns true if the specified string is a valid digit [0-9]. If the string contains more one character,
 -- the function will only take out the very first character of the string sequence, and everything else will be ignored.
-downpour.ioutils.numericutils["is_digit"] = function (char)
+downpour.numeric["is_digit"] = function (char)
   if (not char) or (type(char) ~= "string") then
-    log.write("%s", "[!] - downpour.ioutils.numericutils.is_digit(): Bad argument passed.")
+    log.write("%s", "[!] - downpour.numeric.is_digit(): Bad argument passed.")
   end
   
   local range = sbyte(char, 1)
   return range >= 48 and range <= 57
 end
 
-downpour.ioutils.numericutils["map_to_range"] = function (f, a, b, x, y)
+downpour.numeric["map_to_range"] = function (f, a, b, x, y)
   return (f - a) / (b - a) * (y - x) + x
 end
 
-downpour.ioutils.numericutils["map_to_01"] = function (f, a, b)
+downpour.numeric["map_to_01"] = function (f, a, b)
   return (f - a) / (b - a)
 end
 
-downpour.ioutils.numericutils["map_from_01"] = function (f, x, y)
+downpour.numeric["map_from_01"] = function (f, x, y)
   return f / 1.0 * (y - x) + x
-end -- // downpour.ioutils.numericutils = {}
+end -- // downpour.numeric = {}
 
 downpour.ioutils.stringutils = {}
 
