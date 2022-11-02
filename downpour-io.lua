@@ -194,7 +194,7 @@ downpour.ioutils.stringutils["match_table"] = function (s, t, length)
   end
 
   return false, -1
-end
+end -- // downpour.ioutils.stringutils = {}
 
 downpour.ioutils.stringutils["strip"] = function (buffer, characters)
   _checks("string", "string")
@@ -534,6 +534,40 @@ downpour.ioutils.file["get_list"] = function (path, ext, func)
   return downpour.ioutils.file.get_list_pack(path, ext, func)
 end
 
+-- An incomplete replacement of C's strtok()/C++'s std::strtok(). It offers various methods for searching substrings but doesn't
+-- offer some kind of iterator which can be found in strtok(), so you're pretty much stuck because it only returns the very first matched
+-- result. It also doesn't any provide support for pattern matching (just raw strings), which a lot of Lua string functions take
+-- advantage of (this is intentional).
+local _string_match = function (str, pattern)
+  local start_index, end_index, string_length = -1, -1, -1
+
+  -- Basically, it iterates over all elements of the given string, and continuously checks if one of the character
+  -- in the string matches the very first character of the pattern string. If they matches, it will continue to compare
+  -- consecutive characters from the pattern with the string (starting from the position where the first matched character
+  -- was found). If they all matches, then the pattern is considered a substring of the given string.
+  local j, k, slen, plen = 0, 1, str:len(), pattern:len()
+
+  for i = 1, slen do
+    if (str:byte(i) == pattern:byte(1)) and ((i + plen - 1) <= slen) then
+      j = i
+      k = 1
+      while str:byte(j) == pattern:byte(k) do
+        j = j + 1
+        k = k + 1
+      end
+
+      if k - 1 == plen then
+        start_index = i
+        end_index = i + plen
+        string_length = k
+        break
+      end
+    end
+  end
+
+  return start_index, end_index, string_length
+end
+
 -- Clones/mirrors the whole directory hierarchy inside src to dest, including files and subfolders inside src.
 -- Both the source directory and the destination directory must exist.
 downpour.ioutils.file["clone"] = function (src, dest)
@@ -546,13 +580,13 @@ downpour.ioutils.file["clone"] = function (src, dest)
   local file_table, dir_table, _, _ = downpour.ioutils.file.get_list_unpack(src)
 
   for _, vdir in pairs(dir_table) do
-    local _, pos = downpour.ioutils.stringutils.match(vdir, src)
+    local _, pos = _string_match(vdir, src)
 
     lfs.mkdir(dest .. vdir:sub(pos, #vdir - 1))
   end
 
   for _, vfile in pairs(file_table) do
-    local _, pos =  downpour.ioutils.stringutils.match(vfile, src)
+    local _, pos =  _string_match(vfile, src)
 
     downpour.ioutils.file.copy_binary(vfile, dest .. vfile:sub(pos, #vfile))
   end
