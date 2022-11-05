@@ -23,7 +23,7 @@ This module contains core definitions for Downpour.
 ------------------------------------------
 ]]--
 
-downpour = {}
+local downpour = {}
 
 local _channels = {io.stdout}
 
